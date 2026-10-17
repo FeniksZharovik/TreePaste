@@ -3,7 +3,7 @@
   "displayName": "TreePaste",
   "description": "Tempel struktur proyek dari clipboard, jadilah file dan folder. File yang sudah ada dilewati.",
   "version": "0.1.0",
-  "publisher": "adimastha",
+  "publisher": "FeniksZharovik",
   "license": "MIT",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],
