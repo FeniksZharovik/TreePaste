@@ -1,0 +1,32 @@
+{
+  "name": "treepaste",
+  "version": "0.1.0",
+  "description": "CLI untuk membuat struktur proyek otomatis dari teks tempelan (tree + isi file). File yang sudah ada dilewati.",
+  "license": "MIT",
+  "bin": {
+    "treepaste": "dist/src/cli.js"
+  },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test dist/test/parser.test.js dist/test/writer.test.js",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "cli", "scaffolding", "project-structure", "vscode",
+    "typescript", "nodejs", "developer-tools", "llm", "productivity"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0"
+  }
+}
