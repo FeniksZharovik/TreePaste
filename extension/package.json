@@ -1,0 +1,62 @@
+{
+  "name": "treepaste-vscode",
+  "displayName": "TreePaste",
+  "description": "Tempel struktur proyek dari clipboard, jadilah file dan folder. File yang sudah ada dilewati.",
+  "version": "0.1.0",
+  "publisher": "adimastha",
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "keywords": ["scaffold", "project structure", "tree", "clipboard", "cli"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "treepaste.fromClipboard",
+        "title": "Buat struktur dari clipboard",
+        "category": "TreePaste"
+      },
+      {
+        "command": "treepaste.previewFromClipboard",
+        "title": "Pratinjau struktur dari clipboard (dry-run)",
+        "category": "TreePaste"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "treepaste.fromClipboard",
+          "when": "explorerResourceIsFolder",
+          "group": "2_workspace@90"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TreePaste",
+      "properties": {
+        "treepaste.noRoot": {
+          "type": "boolean",
+          "default": false,
+          "description": "Jangan buat folder root dari baris pertama struktur; tulis langsung ke folder tujuan."
+        },
+        "treepaste.confirmBeforeCreate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Tampilkan konfirmasi (jumlah item yang dibuat dan dilewati) sebelum menulis file."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "build": "npm run typecheck && esbuild src/extension.ts --bundle --platform=node --target=node18 --external:vscode --format=cjs --minify --outfile=dist/extension.js",
+    "package": "npm run build && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.0"
+  }
+}

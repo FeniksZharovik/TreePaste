@@ -87,6 +87,49 @@ Hasil: `src/hello.js` dibuat dan langsung berisi kode di atas.
 > Jika isi file memuat blok kode sendiri (misalnya README), bungkus dengan pagar yang lebih
 > panjang, mis. empat backtick, agar blok bagian dalamnya tidak memutus blok luar.
 
+## Ekstensi VS Code
+
+Tidak mau mengetik di terminal? Gunakan ekstensi di folder [`vscode/`](vscode). Salin struktur,
+buka Command Palette, jalankan **TreePaste: Buat struktur dari clipboard**, periksa ringkasan, klik **Buat**.
+Aturannya sama dengan CLI (file yang sudah ada dilewati, biner dilewati, path berbahaya ditolak).
+
+Pasang dari berkas `.vsix`:
+
+```bash
+code --install-extension treepaste-vscode-0.1.0.vsix
+```
+
+Atau bangun sendiri:
+
+```bash
+cd vscode
+npm install
+npm run package     # menghasilkan treepaste-vscode-<versi>.vsix
+```
+
+## Ekstensi VS Code
+
+Tidak mau mengetik di terminal? Pasang ekstensi dari folder `extension/`
+(atau unduh berkas `.vsix` dari halaman Releases):
+
+1. Buka VS Code, tekan `Ctrl+Shift+X`, klik menu `...` di kanan atas panel Extensions,
+   pilih **Install from VSIX...**, lalu pilih `treepaste-vscode-0.1.0.vsix`.
+   (Atau lewat terminal: `code --install-extension treepaste-vscode-0.1.0.vsix`)
+2. Salin struktur proyek, tekan `Ctrl+Shift+P`, lalu pilih **TreePaste: Buat struktur dari clipboard**.
+   Atau klik kanan sebuah folder di Explorer.
+3. Gunakan **TreePaste: Pratinjau struktur dari clipboard (dry-run)** untuk melihat rencana tanpa menulis.
+
+Ekstensi memakai parser dan writer yang sama dengan CLI, jadi aturannya identik
+(file yang ada dilewati, biner dilewati, path berbahaya ditolak).
+
+Membuat `.vsix` sendiri:
+
+```bash
+cd extension
+npm install
+npm run package
+```
+
 ## Opsi
 
 | Opsi | Fungsi |
@@ -139,12 +182,14 @@ src/parser.ts   teks -> rencana (tree + File Contents)
 src/writer.ts   rencana -> file (skip, biner, penjaga path)
 src/cli.ts      antarmuka baris perintah
 src/index.ts    API library
+vscode/         ekstensi VS Code (memakai src/ sebagai core)
 test/           tes parser dan writer (node:test)
 ```
 
 ## Peta jalan
 
-- [ ] Ekstensi VS Code (command "Buat struktur dari clipboard") yang memakai core yang sama
+- [x] Ekstensi VS Code (command "Buat struktur dari clipboard") yang memakai core yang sama
+- [ ] Publikasi ekstensi ke VS Code Marketplace
 - [ ] Dukungan daftar markdown (`- folder/`) sebagai input
 - [ ] Berkas konfigurasi `.treepasterc`
 
