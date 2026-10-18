@@ -18,6 +18,9 @@ const ANY_HEADING = /^\s{0,3}#{1,6}\s+\S/
 const FENCE = /^(\s*)(`{3,}|~{3,})\s*(.*)$/
 const TREE_PREFIX =
   /^((?:[\s│┃¦]|\|(?!-))*)((?:[├└┣┗╠╚][─━═]*|[|`+\\]-{2,})\s*)?/
+/** A name followed by a flag-like token, e.g. "treepaste --clipboard", is a command, not a file. */
+const COMMAND_LIKE = /\s--?[A-Za-z]/
+
 const NO_EXT_NAMES = new Set([
   'license', 'licence', 'dockerfile', 'makefile', 'procfile', 'gemfile',
   'rakefile', 'readme', 'changelog', 'jenkinsfile', 'vagrantfile', 'codeowners'
@@ -48,7 +51,7 @@ export function parseInput (text: string): Plan {
   const contentLines = contentsIdx >= 0 ? lines.slice(contentsIdx + 1) : []
 
   const treeLines = extractTreeLines(structLines)
-  const { root, entries } = parseTree(treeLines)
+  const { root, entries } = parseTree(treeLines, warnings)
 
   const contents = parseContents(contentLines, warnings)
 
@@ -93,8 +96,8 @@ function extractTreeLines (lines: string[]): string[] {
   return lines.filter(l => !ANY_HEADING.test(l))
 }
 
-function parseTree (lines: string[]): { root: string | null, entries: PlanEntry[] } {
-  const raws: RawLine[] = []
+function parseTree (lines: string[], warnings: string[]): { root: string | null, entries: PlanEntry[] } {
+  let raws: RawLine[] = []
   for (const original of lines) {
     if (!original.trim()) continue
     const line = original.replace(/\t/g, '    ')
@@ -111,6 +114,18 @@ function parseTree (lines: string[]): { root: string | null, entries: PlanEntry[
       explicitDir: /[\\/]$/.test(name)
     })
   }
+
+  // Reject text that clearly is not a project structure (e.g. a copied shell command).
+  const flat = raws.every(r => !r.connector && !r.explicitDir && r.col === raws[0].col)
+  raws = raws.filter(r => {
+    const commandLike = COMMAND_LIKE.test(r.name)
+    const spacedNoExt = flat && /\s/.test(r.name) && !/\.[A-Za-z0-9]+$/.test(r.name)
+    if (commandLike || spacedNoExt) {
+      warnings.push(`Baris diabaikan karena terlihat seperti perintah, bukan nama file: "${r.name}"`)
+      return false
+    }
+    return true
+  })
 
   const hasChild = (i: number): boolean => i + 1 < raws.length && raws[i + 1].col > raws[i].col
 

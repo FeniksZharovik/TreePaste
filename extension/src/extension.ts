@@ -53,7 +53,7 @@ async function run (mode: 'preview' | 'create', uri?: vscode.Uri): Promise<void>
 
   const plan = parseInput(text)
   if (plan.entries.length === 0) {
-    void vscode.window.showWarningMessage('TreePaste: struktur proyek tidak ditemukan di clipboard.')
+    void vscode.window.showWarningMessage('TreePaste: struktur proyek tidak ditemukan di clipboard. Pastikan yang disalin adalah struktur (pohon direktori), bukan perintahnya.')
     return
   }
 

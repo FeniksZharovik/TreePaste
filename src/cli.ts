@@ -6,7 +6,7 @@ import { parseInput } from './parser'
 import { applyPlan, resolveBase } from './writer'
 import type { Result } from './writer'
 
-const VERSION = '0.1.0'
+const VERSION = '0.1.1'
 
 const HELP = `TreePaste ${VERSION}
 Tempel struktur proyek, jadilah file dan folder.
@@ -146,7 +146,11 @@ async function main (): Promise<number> {
 
   const plan = parseInput(text)
   if (plan.entries.length === 0) {
-    process.stderr.write('Struktur tidak ditemukan pada teks yang ditempel.\n')
+    process.stderr.write(
+      'Struktur proyek tidak ditemukan pada teks yang dibaca.\n' +
+      'Pastikan yang disalin adalah struktur (pohon direktori), bukan perintahnya.\n'
+    )
+    for (const w of plan.warnings) process.stderr.write(paint(33, `peringatan: ${w}`) + '\n')
     return 2
   }
 

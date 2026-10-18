@@ -89,38 +89,30 @@ Hasil: `src/hello.js` dibuat dan langsung berisi kode di atas.
 
 ## Ekstensi VS Code
 
-Tidak mau mengetik di terminal? Gunakan ekstensi di folder [`vscode/`](vscode). Salin struktur,
-buka Command Palette, jalankan **TreePaste: Buat struktur dari clipboard**, periksa ringkasan, klik **Buat**.
-Aturannya sama dengan CLI (file yang sudah ada dilewati, biner dilewati, path berbahaya ditolak).
-
-Pasang dari berkas `.vsix`:
-
-```bash
-code --install-extension treepaste-vscode-0.1.0.vsix
-```
-
-Atau bangun sendiri:
-
-```bash
-cd vscode
-npm install
-npm run package     # menghasilkan treepaste-vscode-<versi>.vsix
-```
-
-## Ekstensi VS Code
-
 Tidak mau mengetik di terminal? Pasang ekstensi dari folder `extension/`
 (atau unduh berkas `.vsix` dari halaman Releases):
 
 1. Buka VS Code, tekan `Ctrl+Shift+X`, klik menu `...` di kanan atas panel Extensions,
-   pilih **Install from VSIX...**, lalu pilih `treepaste-vscode-0.1.0.vsix`.
-   (Atau lewat terminal: `code --install-extension treepaste-vscode-0.1.0.vsix`)
+   pilih **Install from VSIX...**, lalu pilih `treepaste-vscode-0.1.1.vsix`.
+   (Atau lewat terminal: `code --install-extension treepaste-vscode-0.1.1.vsix`)
 2. Salin struktur proyek, tekan `Ctrl+Shift+P`, lalu pilih **TreePaste: Buat struktur dari clipboard**.
    Atau klik kanan sebuah folder di Explorer.
 3. Gunakan **TreePaste: Pratinjau struktur dari clipboard (dry-run)** untuk melihat rencana tanpa menulis.
 
 Ekstensi memakai parser dan writer yang sama dengan CLI, jadi aturannya identik
 (file yang ada dilewati, biner dilewati, path berbahaya ditolak).
+
+Memperbarui ke versi terbaru: pasang `.vsix` yang baru dengan perintah yang sama plus `--force`
+(`code --install-extension treepaste-vscode-0.1.1.vsix --force`), lalu muat ulang jendela VS Code.
+
+Mulai versi 0.1.1 publisher ekstensi adalah `FeniksZharovik`, sehingga ID-nya berubah menjadi
+`FeniksZharovik.treepaste-vscode`. VS Code menganggapnya ekstensi berbeda dari versi lama, jadi hapus
+versi lama dulu agar tidak ada dua ekstensi dengan perintah kembar:
+
+```bash
+code --uninstall-extension adimastha.treepaste-vscode
+code --install-extension treepaste-vscode-0.1.1.vsix
+```
 
 Membuat `.vsix` sendiri:
 
@@ -182,8 +174,8 @@ src/parser.ts   teks -> rencana (tree + File Contents)
 src/writer.ts   rencana -> file (skip, biner, penjaga path)
 src/cli.ts      antarmuka baris perintah
 src/index.ts    API library
-vscode/         ekstensi VS Code (memakai src/ sebagai core)
 test/           tes parser dan writer (node:test)
+extension/      ekstensi VS Code (membungkus parser dan writer yang sama)
 ```
 
 ## Peta jalan

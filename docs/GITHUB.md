@@ -14,7 +14,7 @@ CLI untuk membuat struktur proyek otomatis dari teks tempelan (tree + isi file).
 ```bash
 git init
 git add .
-git commit -m "feat: rilis awal TreePaste v0.1.0"
+git commit -m "fix: tolak teks perintah di clipboard (v0.1.1)"
 git branch -M main
 git remote add origin https://github.com/<username>/treepaste.git
 git push -u origin main
@@ -22,17 +22,48 @@ git push -u origin main
 
 Lalu di GitHub: isi **Description** dan **Topics** di kolom About (ikon roda gigi).
 
-## Rilis v0.1.0
+## Rilis v0.1.1
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
-Buka **Releases > Draft a new release**, pilih tag `v0.1.0`, judul `TreePaste v0.1.0`, lalu tempel catatan di bawah.
-Pada bagian **Attach binaries**, unggah `extension/treepaste-vscode-0.1.0.vsix` (hasil `npm run package` di folder `extension`).
+Buka **Releases > Draft a new release**, pilih tag `v0.1.1`, judul `TreePaste v0.1.1`, lalu tempel catatan di bawah.
+Pada bagian **Attach binaries**, unggah `extension/treepaste-vscode-0.1.1.vsix` (hasil `npm run package` di folder `extension`).
 
-### Catatan release
+### Catatan release v0.1.1
+
+```markdown
+## TreePaste v0.1.1: perbaikan input clipboard
+
+Rilis perbaikan untuk `treepaste --clipboard` dan ekstensi VS Code.
+
+### Diperbaiki
+- Teks perintah yang tidak sengaja tersalin (mis. `treepaste --clipboard`, `npm install`)
+  tidak lagi dibuat menjadi file tanpa ekstensi. Teks seperti itu sekarang diabaikan
+  dengan peringatan, dan CLI keluar dengan kode 2 jika tidak ada struktur yang valid.
+- Baris perintah yang terselip di atas struktur asli dilewati; strukturnya tetap dibuat.
+- Pesan galat lebih jelas: "pastikan yang disalin adalah struktur, bukan perintahnya".
+
+### Berubah
+- Publisher ekstensi VS Code diganti menjadi `FeniksZharovik`. ID ekstensi kini
+  `FeniksZharovik.treepaste-vscode`, jadi versi lama (`adimastha.treepaste-vscode`) harus dihapus dulu.
+
+### Tidak berubah
+- Daftar file biasa (`README.md`, `LICENSE`, `My Notes.txt`) tetap berfungsi.
+- File yang sudah ada tetap dilewati; file biner tetap dilewati.
+
+### Pembaruan
+- CLI: `npm install -g treepaste@latest`
+- Ekstensi VS Code: unduh `treepaste-vscode-0.1.1.vsix` di bawah, lalu
+  `code --uninstall-extension adimastha.treepaste-vscode` (hanya jika sebelumnya terpasang),
+  `code --install-extension treepaste-vscode-0.1.1.vsix --force`, dan muat ulang jendela VS Code.
+
+Tes: 20 tes otomatis lulus (3 tes baru).
+```
+
+### Catatan release v0.1.0 (riwayat)
 
 ```markdown
 ## TreePaste v0.1.0: rilis pertama
@@ -53,8 +84,7 @@ Tempel struktur proyek, langsung jadi file dan folder.
 npm install -g treepaste
 
 ### Catatan
-Rilis awal. Ekstensi VS Code direncanakan untuk versi berikutnya.
-Laporkan masalah lewat tab Issues.
+Rilis awal. Laporkan masalah lewat tab Issues.
 ```
 
 ## Publish ke npm (opsional)
@@ -67,52 +97,16 @@ npm publish
 Cek dulu ketersediaan nama `treepaste` di npm. Jika sudah dipakai, ganti `name` di `package.json`
 (mis. `@username/treepaste`) dan gunakan `npm publish --access public`.
 
-## Ekstensi VS Code
-
-Ekstensi ada di folder `vscode/` dan memakai core yang sama dengan CLI.
-
-```bash
-cd vscode
-npm install
-npm run package
-```
-
-Perintah di atas menghasilkan `treepaste-vscode-0.1.0.vsix`. Lampirkan berkas itu pada halaman release
-agar pengguna bisa memasangnya dengan `code --install-extension treepaste-vscode-0.1.0.vsix`.
-
-Sebelum membagikan ke publik, ganti `publisher` di `vscode/package.json` dengan nama publisher Anda
-(dan tambahkan field `repository`). Untuk Marketplace: buat publisher di https://marketplace.visualstudio.com/manage,
-lalu `npx @vscode/vsce publish`.
-
-### Catatan release ekstensi
-
-```markdown
-## TreePaste untuk VS Code v0.1.0
-
-Tempel struktur proyek dari clipboard, langsung jadi file dan folder, tanpa terminal.
-
-### Yang baru
-- Perintah **TreePaste: Buat struktur dari clipboard**
-- Perintah **TreePaste: Pratinjau struktur dari clipboard (dry-run)**
-- Perintah **TreePaste: Buat struktur dari teks terpilih** (juga di menu klik kanan)
-- Ringkasan dan konfirmasi sebelum file dibuat (`treepaste.confirmBeforeCreate`)
-- Opsi `treepaste.noRoot` untuk menulis langsung ke folder workspace
-- File yang sudah ada tidak ditimpa; file biner dilewati; path di luar workspace ditolak
-
-### Pemasangan
-code --install-extension treepaste-vscode-0.1.0.vsix
-```
-
 ## Publish ekstensi ke Marketplace (opsional)
 
-1. Buat publisher di <https://marketplace.visualstudio.com/manage> dan ganti `publisher` di `extension/package.json`.
+1. Buat publisher dengan ID `FeniksZharovik` di <https://marketplace.visualstudio.com/manage> (harus sama persis dengan `publisher` di `extension/package.json`).
 2. Tambahkan `repository` (URL repo GitHub) di `extension/package.json`.
 3. Buat Personal Access Token (scope Marketplace > Manage), lalu:
 
 ```bash
 cd extension
-npx vsce login <publisher>
+npx vsce login FeniksZharovik
 npx vsce publish
 ```
 
-Untuk Open VSX (VSCodium dan sejenisnya): `npx ovsx publish treepaste-vscode-0.1.0.vsix -p <token>`.
+Untuk Open VSX (VSCodium dan sejenisnya): `npx ovsx publish treepaste-vscode-0.1.1.vsix -p <token>`.

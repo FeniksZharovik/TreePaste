@@ -101,3 +101,24 @@ test('content-only headings add files that are missing from the tree', () => {
   assert.ok(plan.entries.some(e => e.path === 'b/c.txt' && e.content === 'X'))
   assert.equal(plan.warnings.length, 1)
 })
+
+test('a copied shell command is not treated as a file name', () => {
+  for (const cmd of ['treepaste --clipboard', 'treepaste -c', 'npm install', 'git clone https://x/y.git --depth 1']) {
+    const plan = parseInput(cmd + '\n')
+    assert.equal(plan.entries.length, 0, cmd)
+    assert.ok(plan.warnings.length >= 1, cmd)
+  }
+})
+
+test('plain flat file lists and names with spaces still work', () => {
+  const plan = parseInput('README.md\nLICENSE\nMy Notes.txt\n.gitignore\n')
+  assert.deepEqual(plan.entries.map(e => e.path), ['README.md', 'LICENSE', 'My Notes.txt', '.gitignore'])
+  assert.equal(plan.warnings.length, 0)
+})
+
+test('command line mixed into a real tree is skipped, tree is kept', () => {
+  const plan = parseInput('treepaste --clipboard\n\nproj/\n├── a.txt\n└── b.txt\n')
+  assert.deepEqual(plan.entries.map(e => e.path), ['a.txt', 'b.txt'])
+  assert.equal(plan.root, 'proj')
+  assert.equal(plan.warnings.length, 1)
+})

@@ -1,6 +1,6 @@
 {
   "name": "treepaste",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI untuk membuat struktur proyek otomatis dari teks tempelan (tree + isi file). File yang sudah ada dilewati.",
   "license": "MIT",
   "bin": {
